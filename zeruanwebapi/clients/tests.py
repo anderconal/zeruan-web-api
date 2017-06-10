@@ -8,8 +8,6 @@ from .models import PARTNER_OPTIONS, KNOWN_FOR_CHOICES, LOPD_CHANNEL_CHOICES, LO
 
 class ClientTestCase(TestCase):
     """This class defines the test suite for the Client model."""
-
-
     def setUp(self):
         """Define the test Client and other test variables."""
         self.test_client = Client.objects.create(
@@ -36,7 +34,7 @@ class ClientTestCase(TestCase):
 
 
     def test_string_representation(self):
-        """String representation of Client model should be: name (white space) surname (white space) second_surname"""
+        """String representation of Client model should be: name (white space) surname (white space) second_surname."""
 
         self.assertEqual(str(self.test_client), self.test_client.name + ' ' +
                          self.test_client.surname + ' ' +
@@ -44,7 +42,7 @@ class ClientTestCase(TestCase):
 
 
     def test_verbose_name_plural(self):
-        """The pluralization of Client should be Clients"""
+        """The pluralization of Client should be Clients."""
         self.assertEqual(str(Client._meta.verbose_name_plural), 'clients')
 
 
