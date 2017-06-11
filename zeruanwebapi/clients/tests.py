@@ -4,10 +4,14 @@ from datetime import datetime
 from django.test import TestCase
 from .models import Client
 from .models import PARTNER_OPTIONS, KNOWN_FOR_CHOICES, LOPD_CHANNEL_CHOICES, LOPD_OPTION_CHOICES
+from rest_framework.test import APIClient
+from rest_framework import status
+from django.core.urlresolvers import reverse
 
-
-class ClientTestCase(TestCase):
+class ClientModelTestCase(TestCase):
     """This class defines the test suite for the Client model."""
+
+
     def setUp(self):
         """Define the test Client and other test variables."""
         self.test_client = Client.objects.create(
@@ -72,3 +76,43 @@ class ClientTestCase(TestCase):
         )
         new_count = Client.objects.count()
         self.assertNotEqual(old_count, new_count)
+
+
+class ClientViewTestCase(TestCase):
+    """Test suite for the Client views."""
+
+
+    def setUp(self):
+        """Define the test API client and other test variables."""
+        self.client = APIClient()
+        self.client_data = {
+            "dni": "00099887y",
+            "name": "Harry",
+            "surname": "Potter",
+            "second_surname": "",
+            "birthdate": "1992-06-22",
+            "phone_number": "999323456",
+            "address": "Tellafake, 2",
+            "postal_code": "48012",
+            "city": "London",
+            "province": "Vizcaya",
+            "email": "harry@potter.es",
+            "release_date": "2017-06-11",
+            "partner": "NO_PARTNER",
+            "partner_release_date": None,
+            "known_for": "FACEBOOK",
+            "lopd": False,
+            "lopd_channel": "WHATSAPP",
+            "lopd_options": "",
+            "notes": ""
+        }
+        self.response = self.client.post(
+            reverse('create'),
+            self.client_data,
+            format="json"
+        )
+
+
+    def test_can_create_a_client(self):
+        """Test the API has Client creation capability."""
+        self.assertEqual(self.response.status_code, status.HTTP_201_CREATED)
