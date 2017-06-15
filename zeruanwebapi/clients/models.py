@@ -74,7 +74,7 @@ class Client(models.Model):
     )
     known_for = models.CharField(
         choices=KNOWN_FOR_CHOICES,
-        default=KNOWN_FOR_CHOICES.FACEBOOK,
+        default=KNOWN_FOR_CHOICES.OTROS,
         max_length=255
     )
     lopd = models.BooleanField(default=False)
