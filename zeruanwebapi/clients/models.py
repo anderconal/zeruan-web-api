@@ -70,8 +70,8 @@ class Client(models.Model):
     partner_release_date = models.DateField(
         auto_now=False,
         auto_now_add=False,
-        blank=True, null=True
-    )
+        blank=True,
+        null=True)
     known_for = models.CharField(
         choices=KNOWN_FOR_CHOICES,
         default=KNOWN_FOR_CHOICES.OTROS,
