@@ -44,7 +44,6 @@ class Product(models.Model):
         max_length=255
     )
 
-
     def __unicode__(self):
         return self.name
 
@@ -54,9 +53,7 @@ class PrepaidCard(Product):
     available_amount = models.DecimalField(default=0, max_digits=5, decimal_places=2)
     client = models.ForeignKey(
         Client,
-        related_name='client_id',
-        on_delete=models.CASCADE
-    )
+        on_delete=models.CASCADE)
     purchase_date = models.DateTimeField(
         default=timezone.now())
     expiry_date = models.DateTimeField(

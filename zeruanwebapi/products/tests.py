@@ -187,7 +187,9 @@ class PrepaidCardModelTestCase(TestCase):
         new_count = PrepaidCard.objects.count()
         self.assertNotEqual(old_count, new_count)
 
-
+"""
+import pdb
+pdb.set_trace()"""
 class PrepaidCardViewTestCase(TestCase):
     """Test suite for the PrepaidCard views."""
 
@@ -195,25 +197,45 @@ class PrepaidCardViewTestCase(TestCase):
     def setUp(self):
         """Define the test client and other test variables."""
         self.client = APIClient()
+        self.test_client = Client.objects.create(
+            dni='12345678t',
+            name='Ander',
+            surname='Conal',
+            second_surname='Fuertes',
+            birthdate=datetime.now(),
+            phone_number='666666666',
+            address='Fake Street, 7',
+            postal_code='66666',
+            city='Bilbao',
+            province='Vizcaya',
+            email='ander.conal@gmail.com',
+            release_date=datetime.now(),
+            partner=PARTNER_OPTIONS.NO_PARTNER,
+            partner_release_date=datetime.now(),
+            known_for=KNOWN_FOR_CHOICES.FACEBOOK,
+            lopd=True,
+            lopd_channel=LOPD_CHANNEL_CHOICES.WHATSAPP,
+            lopd_options=LOPD_OPTION_CHOICES.FOTODEPILACION,
+            notes='Test'
+        )
         self.prepaid_card_data = {
             "product_ptr_id": 5,
-    "name": "Another Pack",
-    "price": "120.00",
-    "stock": 0,
-    "category": "METODOS_DE_PAGO",
-    "available_amount": "120.00",
-    "client": 1,
-    "client_id": 1,
-    "expiry_date": "2018-07-01T21:39:33.315323Z",
-    "purchase_date": "2017-07-01T21:39:33.315291Z"
+            "name": "Another Pack",
+            "price": "120.00",
+            "stock": 0,
+            "category": "METODOS_DE_PAGO",
+            "available_amount": "120.00",
+            "client": self.test_client.id,
+            "expiry_date": "2018-07-01T21:39:33.315323Z",
+            "purchase_date": "2017-07-01T21:39:33.315291Z"
         }
-        self.response = self.client.post(
-            reverse('prepaid-card-create'),
-            self.prepaid_card_data,
-            format="json")
-
 
     def test_api_can_create_a_prepaid_card(self):
         """Test the api has prepaid card creation capability."""
-        print(self.response.content)
-        self.assertEqual(self.response.status_code, status.HTTP_201_CREATED)
+        response = self.client.post(
+            reverse('prepaid-card-create'),
+            self.prepaid_card_data,
+            format="json")
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        # checkar que el contenido respuesta es lo que quieres
+        assert PrepaidCard.objects.get(pk=response.json().get('id'))

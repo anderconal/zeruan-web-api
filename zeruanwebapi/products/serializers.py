@@ -15,11 +15,11 @@ class ProductSerializer(serializers.ModelSerializer):
 
 class PrepaidCardSerializer(serializers.ModelSerializer):
     """Serializer to map the Model instance into JSON format."""
-    client_id = serializers.PrimaryKeyRelatedField(read_only=True)
+    client = serializers.PrimaryKeyRelatedField(queryset=Client.objects.all())
 
 
     class Meta:
         """Meta class to map serializer's fields with the model fields."""
         model = PrepaidCard
-        fields = ('product_ptr_id', 'name', 'price', 'stock', 'category', 'available_amount', 'client', 'client_id',
+        fields = ('id', 'name', 'price', 'stock', 'category', 'available_amount', 'client',
                   'expiry_date', 'purchase_date')
