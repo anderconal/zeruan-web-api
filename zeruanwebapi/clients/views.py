@@ -6,7 +6,7 @@ from rest_framework import generics
 from .serializers import ClientSerializer
 from .models import Client
 
-class CreateView(generics.ListCreateAPIView):
+class ClientCreateView(generics.ListCreateAPIView):
     """This class defines the create behavior of our rest api."""
     queryset = Client.objects.all()
     serializer_class = ClientSerializer
@@ -16,7 +16,7 @@ class CreateView(generics.ListCreateAPIView):
         serializer.save()
 
 
-class DetailsView(generics.RetrieveUpdateDestroyAPIView):
+class ClientDetailsView(generics.RetrieveUpdateDestroyAPIView):
     """This class handles the http GET, PUT and DELETE requests."""
     queryset = Client.objects.all()
-    serializer_class =  ClientSerializer
+    serializer_class = ClientSerializer

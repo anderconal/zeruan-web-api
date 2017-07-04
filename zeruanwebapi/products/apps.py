@@ -8,5 +8,5 @@ class ProductsConfig(AppConfig):
     name = 'products'
 
 
-class PrepaidCardConfig(AppConfig):
+class PrepaidCardsConfig(AppConfig):
     name = 'prepaid_card'

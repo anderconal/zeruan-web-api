@@ -107,7 +107,7 @@ class ClientViewTestCase(TestCase):
             "notes": ""
         }
         self.response = self.client.post(
-            reverse('create'),
+            reverse('client-create'),
             self.client_data,
             format="json"
         )
@@ -122,7 +122,7 @@ class ClientViewTestCase(TestCase):
         """Test the API can get a given Client."""
         client = Client.objects.get()
         response = self.client.get(
-            reverse('details', kwargs={'pk': client.id}),
+            reverse('client-details', kwargs={'pk': client.id}),
             format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, client.id)
@@ -153,17 +153,18 @@ class ClientViewTestCase(TestCase):
             "notes": ""
         }
         response = self.client.put(
-            reverse('details', kwargs={'pk': client.id}),
+            reverse('client-details', kwargs={'pk': client.id}),
             client_to_update, format='json'
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
 
 
     def test_can_delete_a_client(self):
         """Test the API can delete a Client."""
         client = Client.objects.get()
         response = self.client.delete(
-            reverse('details', kwargs={'pk': client.id}),
+            reverse('client-details', kwargs={'pk': client.id}),
             format='json',
             follow=True)
         self.assertEquals(response.status_code, status.HTTP_204_NO_CONTENT)

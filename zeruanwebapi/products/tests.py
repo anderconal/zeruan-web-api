@@ -6,6 +6,9 @@ from django.utils import timezone
 from .models import Product, PrepaidCard, PRODUCT_CATEGORIES
 from clients.models import Client
 from clients.models import PARTNER_OPTIONS, KNOWN_FOR_CHOICES, LOPD_CHANNEL_CHOICES, LOPD_OPTION_CHOICES
+from rest_framework.test import APIClient
+from rest_framework import status
+from django.core.urlresolvers import reverse
 
 
 def add_years(date, years):
@@ -66,11 +69,41 @@ class ProductModelTestCase(TestCase):
         self.assertEqual(str(Product._meta.verbose_name_plural), 'products')
 
 
-    def test_purchase_date(self):
-        """The default purchase date should be the current one."""
-        self.assertEqual(self.test_product.purchase_date.year, timezone.now().year)
-        self.assertEqual(self.test_product.purchase_date.month, timezone.now().month)
-        self.assertEqual(self.test_product.purchase_date.day, timezone.now().day)
+    def test_model_can_create_a_product(self):
+        old_count = Product.objects.count()
+        Product.objects.create(
+            name='The best product',
+            price=10.00,
+            stock=0,
+            category=PRODUCT_CATEGORIES.UNCATEGORIZED
+        )
+        new_count = Product.objects.count()
+        self.assertNotEqual(old_count, new_count)
+
+
+class ProductViewTestCase(TestCase):
+    """Test suite for the Product views."""
+
+
+    def setUp(self):
+        """Define the test client and other test variables."""
+        self.client = APIClient()
+        self.product_data = {
+            "id": 1,
+            "name": "Crema hidratante total descontracturante",
+            "price": "39.90",
+            "stock": 2,
+            "category": "LINEA_ESENCIAL"
+        }
+        self.response = self.client.post(
+            reverse('product-create'),
+            self.product_data,
+            format="json")
+
+
+    def test_api_can_create_a_product(self):
+        """Test the api has product creation capability."""
+        self.assertEqual(self.response.status_code, status.HTTP_201_CREATED)
 
 
 class PrepaidCardModelTestCase(TestCase):
@@ -106,7 +139,6 @@ class PrepaidCardModelTestCase(TestCase):
             price=120.00,
             stock=0,
             category=PRODUCT_CATEGORIES.METODOS_DE_PAGO,
-            purchase_date=timezone.now(),
             available_amount=0.00,
             client=self.test_client
         )
@@ -133,3 +165,55 @@ class PrepaidCardModelTestCase(TestCase):
         self.assertEqual(self.test_prepaid_card.expiry_date.year, add_years(timezone.now(), 1).year)
         self.assertEqual(self.test_prepaid_card.expiry_date.month, add_years(timezone.now(), 1).month)
         self.assertEqual(self.test_prepaid_card.expiry_date.day, add_years(timezone.now(), 1).day)
+
+
+    def test_purchase_date(self):
+        """The default purchase date should be the current one."""
+        self.assertEqual(self.test_prepaid_card.purchase_date.year, timezone.now().year)
+        self.assertEqual(self.test_prepaid_card.purchase_date.month, timezone.now().month)
+        self.assertEqual(self.test_prepaid_card.purchase_date.day, timezone.now().day)
+
+
+    def test_model_can_create_a_prepaid_card(self):
+        old_count = PrepaidCard.objects.count()
+        PrepaidCard.objects.create(
+            name='Pack Zeruan Bat',
+            price=120.00,
+            stock=0,
+            category=PRODUCT_CATEGORIES.METODOS_DE_PAGO,
+            available_amount=0.00,
+            client=self.test_client
+        )
+        new_count = PrepaidCard.objects.count()
+        self.assertNotEqual(old_count, new_count)
+
+
+class PrepaidCardViewTestCase(TestCase):
+    """Test suite for the PrepaidCard views."""
+
+
+    def setUp(self):
+        """Define the test client and other test variables."""
+        self.client = APIClient()
+        self.prepaid_card_data = {
+            "product_ptr_id": 5,
+    "name": "Another Pack",
+    "price": "120.00",
+    "stock": 0,
+    "category": "METODOS_DE_PAGO",
+    "available_amount": "120.00",
+    "client": 1,
+    "client_id": 1,
+    "expiry_date": "2018-07-01T21:39:33.315323Z",
+    "purchase_date": "2017-07-01T21:39:33.315291Z"
+        }
+        self.response = self.client.post(
+            reverse('prepaid-card-create'),
+            self.prepaid_card_data,
+            format="json")
+
+
+    def test_api_can_create_a_prepaid_card(self):
+        """Test the api has prepaid card creation capability."""
+        print(self.response.content)
+        self.assertEqual(self.response.status_code, status.HTTP_201_CREATED)

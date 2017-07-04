@@ -43,8 +43,6 @@ class Product(models.Model):
         default=PRODUCT_CATEGORIES.UNCATEGORIZED,
         max_length=255
     )
-    purchase_date = models.DateTimeField(
-        default=timezone.now())
 
 
     def __unicode__(self):
@@ -56,8 +54,11 @@ class PrepaidCard(Product):
     available_amount = models.DecimalField(default=0, max_digits=5, decimal_places=2)
     client = models.ForeignKey(
         Client,
+        related_name='client_id',
         on_delete=models.CASCADE
     )
+    purchase_date = models.DateTimeField(
+        default=timezone.now())
     expiry_date = models.DateTimeField(
         default=add_years(timezone.now(), 1)
     )
