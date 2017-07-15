@@ -89,21 +89,26 @@ class ProductViewTestCase(TestCase):
         """Define the test client and other test variables."""
         self.client = APIClient()
         self.product_data = {
-            "id": 1,
             "name": "Crema hidratante total descontracturante",
             "price": "39.90",
             "stock": 2,
             "category": "LINEA_ESENCIAL"
         }
-        self.response = self.client.post(
-            reverse('product-create'),
-            self.product_data,
-            format="json")
 
 
     def test_api_can_create_a_product(self):
         """Test the api has product creation capability."""
-        self.assertEqual(self.response.status_code, status.HTTP_201_CREATED)
+        response = self.client.post(
+            reverse('product-create'),
+            self.product_data,
+            format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertTrue(Product.objects.get(pk=response.json().get('id')))
+        self.assertEqual(response.json().get('name'), self.product_data.get('name'))
+        self.assertEqual(response.json().get('price'), self.product_data.get('price'))
+        self.assertEqual(response.json().get('stock'), self.product_data.get('stock'))
+        self.assertEqual(response.json().get('category'), self.product_data.get('category'))
 
 
 class PrepaidCardModelTestCase(TestCase):
@@ -187,9 +192,7 @@ class PrepaidCardModelTestCase(TestCase):
         new_count = PrepaidCard.objects.count()
         self.assertNotEqual(old_count, new_count)
 
-"""
-import pdb
-pdb.set_trace()"""
+
 class PrepaidCardViewTestCase(TestCase):
     """Test suite for the PrepaidCard views."""
 
@@ -219,7 +222,6 @@ class PrepaidCardViewTestCase(TestCase):
             notes='Test'
         )
         self.prepaid_card_data = {
-            "product_ptr_id": 5,
             "name": "Another Pack",
             "price": "120.00",
             "stock": 0,
@@ -237,5 +239,12 @@ class PrepaidCardViewTestCase(TestCase):
             self.prepaid_card_data,
             format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        # checkar que el contenido respuesta es lo que quieres
-        assert PrepaidCard.objects.get(pk=response.json().get('id'))
+        self.assertTrue(PrepaidCard.objects.get(pk=response.json().get('id')))
+        self.assertEqual(response.json().get('name'), self.prepaid_card_data.get('name'))
+        self.assertEqual(response.json().get('price'), self.prepaid_card_data.get('price'))
+        self.assertEqual(response.json().get('stock'), self.prepaid_card_data.get('stock'))
+        self.assertEqual(response.json().get('category'), self.prepaid_card_data.get('category'))
+        self.assertEqual(response.json().get('available_amount'), self.prepaid_card_data.get('available_amount'))
+        self.assertEqual(response.json().get('client'), self.prepaid_card_data.get('client'))
+        self.assertEqual(response.json().get('expiry_date'), self.prepaid_card_data.get('expiry_date'))
+        self.assertEqual(response.json().get('purchase_date'), self.prepaid_card_data.get('purchase_date'))
