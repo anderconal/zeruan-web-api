@@ -110,6 +110,49 @@ class ProductViewTestCase(TestCase):
         self.assertEqual(response.json().get('stock'), self.product_data.get('stock'))
         self.assertEqual(response.json().get('category'), self.product_data.get('category'))
 
+    def test_api_can_get_a_product(self):
+        """Test the API can get a given Product."""
+        Product.objects.create(
+            name='The best product',
+            price=10.00,
+            stock=0,
+            category=PRODUCT_CATEGORIES.UNCATEGORIZED
+        )
+
+        product = Product.objects.get()
+        response = self.client.get(
+            reverse('product-details', kwargs={'pk': product.id}),
+            format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, product.id)
+
+
+    def test_api_can_update_a_product(self):
+        """Test the API can update a given Product."""
+        Product.objects.create(
+            name='The best product',
+            price=10.00,
+            stock=0,
+            category=PRODUCT_CATEGORIES.UNCATEGORIZED
+        )
+
+        product = Product.objects.get()
+        product_to_update = {
+            "name": "The updated name",
+            "price": 15.00,
+            "stock": 0,
+            "category": "PERLAS"
+        }
+        response = self.client.put(
+            reverse('product-details', kwargs={'pk': product.id}),
+            product_to_update, format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json().get('name'), product_to_update.get('name'))
+        self.assertEqual(response.json().get('price'), product_to_update.get('price'))
+        self.assertEqual(response.json().get('stock'), product_to_update.get('stock'))
+        self.assertEqual(response.json().get('category'), product_to_update.get('category'))
+
 
 class PrepaidCardModelTestCase(TestCase):
     """This class defines the test suite for the PrepaidCard model."""
@@ -232,6 +275,7 @@ class PrepaidCardViewTestCase(TestCase):
             "purchase_date": "2017-07-01T21:39:33.315291Z"
         }
 
+
     def test_api_can_create_a_prepaid_card(self):
         """Test the api has prepaid card creation capability."""
         response = self.client.post(
@@ -248,3 +292,28 @@ class PrepaidCardViewTestCase(TestCase):
         self.assertEqual(response.json().get('client'), self.prepaid_card_data.get('client'))
         self.assertEqual(response.json().get('expiry_date'), self.prepaid_card_data.get('expiry_date'))
         self.assertEqual(response.json().get('purchase_date'), self.prepaid_card_data.get('purchase_date'))
+
+
+    def test_api_can_get_a_prepaid_card(self):
+        """Test the API can get a given prepaid card."""
+        PrepaidCard.objects.create(
+            name="Another Pack",
+            price="120.00",
+            stock=0,
+            category="METODOS_DE_PAGO",
+            available_amount="120.00",
+            client= self.test_client.id,
+            expiry_date="2018-07-01T21:39:33.315323Z",
+            purchase_date="2017-07-01T21:39:33.315291Z"
+        )
+
+        prepaid_card = PrepaidCard.objects.get()
+        response = self.client.get(
+            reverse('prepaid-card-details', kwargs={'pk': prepaid_card.id}),
+            format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, prepaid_card.id)
+
+
+    def test_api_can_update_a_prepaid_card(self):
+        """Test the API can update a given prepaid card."""

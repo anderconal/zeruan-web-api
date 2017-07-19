@@ -241,3 +241,34 @@ class ClientViewTestCase(TestCase):
         self.assertEqual(response.json().get('lopd_options'), client_to_update.get('lopd_options'))
         self.assertEqual(response.json().get('notes'), client_to_update.get('notes'))
 
+
+    def test_can_delete_a_client(self):
+        """Test the API can delete a Client."""
+        Client.objects.create(
+            dni='87654321t',
+            name='Pepe',
+            surname='Test',
+            second_surname='Django',
+            birthdate=datetime.now(),
+            phone_number='999999999',
+            address='Fake Street, 9',
+            postal_code='99999',
+            city='Bilbao',
+            province='Vizcaya',
+            email='test@gmail.com',
+            release_date=datetime.now(),
+            partner=PARTNER_OPTIONS.NO_PARTNER,
+            partner_release_date=datetime.now(),
+            known_for=KNOWN_FOR_CHOICES.FACEBOOK,
+            lopd=True,
+            lopd_channel=LOPD_CHANNEL_CHOICES.WHATSAPP,
+            lopd_options=LOPD_OPTION_CHOICES.FOTODEPILACION,
+            notes='Test'
+        )
+
+        client = Client.objects.get()
+        response = self.client.delete(
+            reverse('client-details', kwargs={'pk': client.id}),
+            format='json',
+            follow=True)
+        self.assertEquals(response.status_code, status.HTTP_204_NO_CONTENT)
