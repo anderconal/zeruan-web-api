@@ -13,7 +13,21 @@ class ProductCreateView(generics.ListCreateAPIView):
     serializer_class = ProductSerializer
 
 
+class ProductDetailsView(generics.RetrieveUpdateDestroyAPIView):
+    """This class handles the http GET, PUT and DELETE requests."""
+
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+
+
 class PrepaidCardCreateView(generics.ListCreateAPIView):
     """This class defines the create behavior of our rest api."""
+    queryset = PrepaidCard.objects.all()
+    serializer_class = PrepaidCardSerializer
+
+
+class PrepaidCardDetailsView(generics.RetrieveUpdateDestroyAPIView):
+    """This class handles the http GET, PUT and DELETE requests."""
+
     queryset = PrepaidCard.objects.all()
     serializer_class = PrepaidCardSerializer

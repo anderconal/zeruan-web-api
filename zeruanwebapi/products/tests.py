@@ -139,7 +139,7 @@ class ProductViewTestCase(TestCase):
         product = Product.objects.get()
         product_to_update = {
             "name": "The updated name",
-            "price": 15.00,
+            "price": "15.00",
             "stock": 0,
             "category": "PERLAS"
         }
@@ -152,6 +152,22 @@ class ProductViewTestCase(TestCase):
         self.assertEqual(response.json().get('price'), product_to_update.get('price'))
         self.assertEqual(response.json().get('stock'), product_to_update.get('stock'))
         self.assertEqual(response.json().get('category'), product_to_update.get('category'))
+
+
+    def test_api_can_delete_a_product(self):
+        Product.objects.create(
+            name='The best product',
+            price=10.00,
+            stock=0,
+            category=PRODUCT_CATEGORIES.UNCATEGORIZED
+        )
+
+        product = Product.objects.get()
+        response = self.client.delete(
+            reverse('product-details', kwargs={'pk': product.id}),
+            format='json',
+            follow=True)
+        self.assertEquals(response.status_code, status.HTTP_204_NO_CONTENT)
 
 
 class PrepaidCardModelTestCase(TestCase):
@@ -302,7 +318,7 @@ class PrepaidCardViewTestCase(TestCase):
             stock=0,
             category="METODOS_DE_PAGO",
             available_amount="120.00",
-            client= self.test_client.id,
+            client= self.test_client,
             expiry_date="2018-07-01T21:39:33.315323Z",
             purchase_date="2017-07-01T21:39:33.315291Z"
         )
@@ -317,3 +333,59 @@ class PrepaidCardViewTestCase(TestCase):
 
     def test_api_can_update_a_prepaid_card(self):
         """Test the API can update a given prepaid card."""
+        PrepaidCard.objects.create(
+            name="Another Pack",
+            price="120.00",
+            stock=0,
+            category="METODOS_DE_PAGO",
+            available_amount="120.00",
+            client=self.test_client,
+            expiry_date="2018-07-01T21:39:33.315323Z",
+            purchase_date="2017-07-01T21:39:33.315291Z"
+        )
+
+        prepaid_card = PrepaidCard.objects.get()
+        prepaid_card_to_update = {
+            "name": "Updated Pack",
+            "price": "300.00",
+            "stock": 0,
+            "category": "METODOS_DE_PAGO",
+            "available_amount": "300.00",
+            "client": self.test_client.id,
+            "expiry_date": "2018-07-01T21:39:33.315323Z",
+            "purchase_date": "2017-07-01T21:39:33.315291Z"
+        }
+        response = self.client.put(
+            reverse('prepaid-card-details', kwargs={'pk': prepaid_card.id}),
+            prepaid_card_to_update, format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json().get('name'), prepaid_card_to_update.get('name'))
+        self.assertEqual(response.json().get('price'), prepaid_card_to_update.get('price'))
+        self.assertEqual(response.json().get('stock'), prepaid_card_to_update.get('stock'))
+        self.assertEqual(response.json().get('category'), prepaid_card_to_update.get('category'))
+        self.assertEqual(response.json().get('available_amount'), prepaid_card_to_update.get('available_amount'))
+        self.assertEqual(response.json().get('client'), prepaid_card_to_update.get('client'))
+        self.assertEqual(response.json().get('expiry_date'), prepaid_card_to_update.get('expiry_date'))
+        self.assertEqual(response.json().get('purchase_date'), prepaid_card_to_update.get('purchase_date'))
+
+
+    def test_can_delete_a_prepaid_card(self):
+        """Test the API can delete a prepaid card."""
+        PrepaidCard.objects.create(
+            name="Another Pack",
+            price="120.00",
+            stock=0,
+            category="METODOS_DE_PAGO",
+            available_amount="120.00",
+            client=self.test_client,
+            expiry_date="2018-07-01T21:39:33.315323Z",
+            purchase_date="2017-07-01T21:39:33.315291Z"
+        )
+
+        prepaid_card = PrepaidCard.objects.get()
+        response = self.client.delete(
+            reverse('prepaid-card-details', kwargs={'pk': prepaid_card.id}),
+            format='json',
+            follow=True)
+        self.assertEquals(response.status_code, status.HTTP_204_NO_CONTENT)
