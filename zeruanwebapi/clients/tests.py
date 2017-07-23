@@ -11,7 +11,7 @@ from django.core.urlresolvers import reverse
 class ClientModelTestCase(TestCase):
     """This class defines the test suite for the Client model."""
     def setUp(self):
-        """Define the test Client and other test variables."""
+        """Defines needed test variables for the Client model."""
         self.test_client = Client.objects.create(
             dni='12345678t',
             name='Ander',
@@ -79,9 +79,9 @@ class ClientModelTestCase(TestCase):
 
 
 class ClientViewTestCase(TestCase):
-    """Test suite for the Client views."""
+    """Test suite for the Client view."""
     def setUp(self):
-        """Define the test API client and other test variables."""
+        """Defines the test API client and other test variables."""
         self.api_client = APIClient()
 
         self.client_data = {
@@ -129,7 +129,7 @@ class ClientViewTestCase(TestCase):
         )
 
 
-    def test_can_create_a_client(self):
+    def test_api_can_create_a_client(self):
         """Test the API has Client creation capability."""
         response = self.api_client.post(
             reverse('client-create'),
@@ -141,7 +141,7 @@ class ClientViewTestCase(TestCase):
         Client.objects.get(pk=response.json().get('id'))
 
 
-    def test_can_get_a_client(self):
+    def test_api_can_get_a_client(self):
         """Test the API can get a given Client."""
         response = self.api_client.get(
             reverse('client-details',
@@ -153,7 +153,7 @@ class ClientViewTestCase(TestCase):
         Client.objects.get(pk=response.json().get('id'))
 
 
-    def test_can_update_a_client(self):
+    def test_api_can_update_a_client(self):
         """Test the API can update a given Client."""
         response = self.api_client.put(
             reverse('client-details',
@@ -185,7 +185,7 @@ class ClientViewTestCase(TestCase):
         self.assertEqual(response.json().get('notes'), self.client_data.get('notes'))
 
 
-    def test_can_delete_a_client(self):
+    def test_api_can_delete_a_client(self):
         """Test the API can delete a Client."""
         response = self.api_client.delete(
             reverse('client-details',

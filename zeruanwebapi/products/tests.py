@@ -10,6 +10,7 @@ from rest_framework import status
 from django.core.urlresolvers import reverse
 
 
+"""Function which adds the given amount of years to a given date and returns the calculated date."""
 def add_years(date, years):
     new_year = date.year + years
     try:
@@ -24,7 +25,7 @@ def add_years(date, years):
 class ProductModelTestCase(TestCase):
     """This class defines the test suite for the Product model."""
     def setUp(self):
-        """Define the test Product and other test variables."""
+        """Defines needed test variables for the Product model."""
         self.test_client = Client.objects.create(
             dni='12345678t',
             name='Ander',
@@ -83,7 +84,7 @@ class ProductModelTestCase(TestCase):
 class ProductViewTestCase(TestCase):
     """Test suite for the Product views."""
     def setUp(self):
-        """Define the test client and other test variables."""
+        """Defines the test client and other test variables."""
         self.client = APIClient()
 
         self.product_data = {
@@ -131,6 +132,7 @@ class ProductViewTestCase(TestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        Product.objects.get(pk=response.json().get('id'))
         self.assertEqual(response.json().get('name'), self.product_data.get('name'))
         self.assertEqual(response.json().get('price'), self.product_data.get('price'))
         self.assertEqual(response.json().get('stock'), self.product_data.get('stock'))
@@ -143,13 +145,14 @@ class ProductViewTestCase(TestCase):
             kwargs={'pk': self.product.id}),
             format='json',
             follow=True)
+
         self.assertEquals(response.status_code, status.HTTP_204_NO_CONTENT)
 
 
 class PrepaidCardModelTestCase(TestCase):
     """This class defines the test suite for the PrepaidCard model."""
     def setUp(self):
-        """Define the test Prepaid Card and other test variables."""
+        """Defines the test Prepaid Card and other test variables."""
         self.test_client = Client.objects.create(
             dni='12345678t',
             name='Ander',
@@ -232,7 +235,7 @@ class PrepaidCardModelTestCase(TestCase):
 class PrepaidCardViewTestCase(TestCase):
     """Test suite for the PrepaidCard views."""
     def setUp(self):
-        """Define the test client and other test variables."""
+        """Defines the test client and other test variables."""
         self.client = APIClient()
 
         self.test_client = Client.objects.create(
@@ -299,6 +302,7 @@ class PrepaidCardViewTestCase(TestCase):
             kwargs={'pk': self.prepaid_card.id}),
             format="json"
         )
+
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         PrepaidCard.objects.get(pk=response.json().get('id'))
 
@@ -313,6 +317,7 @@ class PrepaidCardViewTestCase(TestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        PrepaidCard.objects.get(pk=response.json().get('id'))
         self.assertEqual(response.json().get('name'), self.prepaid_card_data.get('name'))
         self.assertEqual(response.json().get('price'), self.prepaid_card_data.get('price'))
         self.assertEqual(response.json().get('stock'), self.prepaid_card_data.get('stock'))
@@ -331,4 +336,5 @@ class PrepaidCardViewTestCase(TestCase):
             format='json',
             follow=True
         )
+
         self.assertEquals(response.status_code, status.HTTP_204_NO_CONTENT)

@@ -1,7 +1,4 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
-
-from django.shortcuts import render
+# -*- coding: utf-8 -*
 from rest_framework import generics
 from .serializers import ProductSerializer, PrepaidCardSerializer
 from .models import Product, PrepaidCard
