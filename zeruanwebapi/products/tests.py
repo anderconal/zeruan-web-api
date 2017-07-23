@@ -116,8 +116,10 @@ class ProductViewTestCase(TestCase):
     def test_api_can_get_a_product(self):
         """Test the API can get a given Product."""
         response = self.client.get(
-            reverse('product-details', kwargs={'pk': self.product.id}),
+            reverse('product-details',
+            kwargs={'pk': self.product.id}),
             format="json")
+
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         Product.objects.get(pk=response.json().get('id'))
 
