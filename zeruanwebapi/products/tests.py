@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
 from datetime import datetime
 from django.test import TestCase
 from django.utils import timezone
@@ -50,9 +52,9 @@ class ProductModelTestCase(TestCase):
 
         self.test_product = Product.objects.create(
             name='The best product',
-            price = 10.00,
-            stock = 0,
-            category = PRODUCT_CATEGORIES.UNCATEGORIZED
+            price=10.00,
+            stock=0,
+            category=PRODUCT_CATEGORIES.UNCATEGORIZED
         )
 
 
