@@ -1,6 +1,15 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.shortcuts import render
+from rest_framework import generics
+from .serializers import ServiceSerializer
+from .models import Service
 
-# Create your views here.
+class ServiceCreateView(generics.ListCreateAPIView):
+    """This class defines the create behavior of our rest api."""
+    queryset = Service.objects.all()
+    serializer_class = ServiceSerializer
+
+    def perform_create(self, serializer):
+        """Save the post data when creating a new Service."""
+        serializer.save()
