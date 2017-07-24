@@ -70,11 +70,18 @@ class ServiceViewTestCase(TestCase):
             "category": "PEDICURA",
             "description": "Description"
         }
+
+        self.service = Service.objects.create(
+            name='Manicura Zeruan',
+            price=15.50,
+            category=CATEGORIES.MANICURA,
+            description='Test description'
+        )
     
     
     def test_api_can_create_a_service(self):
         """Test the API has Client creation capability."""
-        response = self.client.post(
+        response = self.api_client.post(
             reverse('service-create'),
             self.service_data,
             format="json"
@@ -86,7 +93,7 @@ class ServiceViewTestCase(TestCase):
 
     def test_default_duration_on_api_create(self):
         """The default duration should be 900."""
-        response = self.client.post(
+        response = self.api_client.post(
             reverse('service-create'),
             self.service_data,
             format="json"
@@ -95,3 +102,45 @@ class ServiceViewTestCase(TestCase):
         self.assertEqual(response.json().get('duration'), 900)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         Service.objects.get(pk=response.json().get('id'))
+
+
+    def test_api_can_get_a_service(self):
+        """Test the API can get a given Service."""
+        response = self.api_client.get(
+            reverse('service-details',
+            kwargs={'pk': self.service.id}),
+            format="json"
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        Service.objects.get(pk=response.json().get('id'))
+
+
+    def test_api_can_updte_a_service(self):
+        """Test the API can update a given Service."""
+        response = self.api_client.put(
+            reverse('service-details',
+            kwargs={'pk': self.service.id}),
+            self.service_data,
+            format='json'
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        Service.objects.get(pk=response.json().get('id'))
+        self.assertEqual(response.json().get('name'), self.service_data.get('name'))
+        self.assertEqual(response.json().get('price'), self.service_data.get('price'))
+        self.assertEqual(response.json().get('duration'), 900)
+        self.assertEqual(response.json().get('category'), self.service_data.get('category'))
+        self.assertEqual(response.json().get('description'), self.service_data.get('description'))
+
+
+    def test_api_can_delete_a_service(self):
+        """Test the API can delete a Service."""
+        response = self.api_client.delete(
+            reverse('service-details',
+            kwargs={'pk': self.service.id}),
+            format='json',
+            follow=True
+        )
+
+        self.assertEquals(response.status_code, status.HTTP_204_NO_CONTENT)
