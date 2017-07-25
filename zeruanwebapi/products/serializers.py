@@ -2,7 +2,6 @@ from rest_framework import serializers
 from .models import Product, PrepaidCard
 from clients.models import Client
 
-
 class ProductSerializer(serializers.ModelSerializer):
     """Serializer to map the Model instance into JSON format."""
 

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-""" Set UTF-8 enconding """
-
 from __future__ import unicode_literals
+
 from django.db import models
 from clients.models import Client
 from django.utils import timezone

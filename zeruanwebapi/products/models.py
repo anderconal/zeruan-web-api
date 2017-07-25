@@ -7,7 +7,6 @@ from calendar import isleap
 from model_utils import Choices
 from clients.models import Client
 
-
 PRODUCT_CATEGORIES = Choices(
     ('CAFETERAPIA', 'Cafeterapia'),
     ('FITOTERAPIA', 'Fitoterapia'),
