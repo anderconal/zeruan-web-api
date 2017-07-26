@@ -9,6 +9,7 @@ from services.models import Service, CATEGORIES
 from products.models import Product, PrepaidCard, PRODUCT_CATEGORIES
 from datetime import datetime
 from django.utils import timezone
+from django.db import IntegrityError
 
 class InvoiceDetailModelTestCase(TestCase):
     """This class defines the test suite for the InvoiceDetail model."""
@@ -84,16 +85,9 @@ class InvoiceDetailModelTestCase(TestCase):
         """Test the InvoiceDetail model can create a InvoiceDetail."""
         old_count = InvoiceDetail.objects.count()
 
-        awesome_service = Service.objects.create(
-            name='Awesome service',
-            price=90.00,
-            category=CATEGORIES.MANICURA,
-            description='Test description'
-        )
-
         InvoiceDetail.objects.create(
             invoice=self.test_invoice,
-            service=awesome_service
+            service=self.test_service
         )
 
         new_count = InvoiceDetail.objects.count()

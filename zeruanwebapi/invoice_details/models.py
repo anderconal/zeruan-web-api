@@ -29,18 +29,18 @@ class InvoiceDetail(models.Model):
         Invoice,
         on_delete=models.CASCADE,
     )
-    service = models.OneToOneField(
+    service = models.ForeignKey(
         Service,
         on_delete=models.CASCADE,
         blank=True,
         null=True)
-    product = models.OneToOneField(
+    product = models.ForeignKey(
         Product,
         on_delete=models.CASCADE,
         blank=True,
         null=True,
         related_name="product")
-    prepaid_card = models.OneToOneField(
+    prepaid_card = models.ForeignKey(
         PrepaidCard,
         on_delete=models.CASCADE,
         blank=True,
