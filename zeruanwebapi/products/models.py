@@ -6,6 +6,10 @@ from django.utils import timezone
 from calendar import isleap
 from model_utils import Choices
 from clients.models import Client
+from django.db.models.signals import post_save
+from django.contrib.auth.models import User
+from rest_framework.authtoken.models import Token
+from django.dispatch import receiver
 
 PRODUCT_CATEGORIES = Choices(
     ('CAFETERAPIA', 'Cafeterapia'),
@@ -62,3 +66,9 @@ class PrepaidCard(Product):
 
     def __unicode__(self):
         return self.name + ' ' + str(self.id) + ' ' + self.client.name + ' ' + str(self.client.id)
+
+# This receiver handles token creation immediately a new user is created.
+@receiver(post_save, sender=User)
+def create_auth_token(sender, instance=None, created=False, **kwargs):
+    if created:
+        Token.objects.create(user=instance)
