@@ -67,7 +67,8 @@ class InvoiceDetailModelTestCase(TestCase):
 
         self.test_invoice_detail = InvoiceDetail.objects.create(
             invoice=self.test_invoice,
-            service=self.test_service
+            service=self.test_service,
+            unit_price=self.test_service.price
         )
 
 
@@ -87,7 +88,8 @@ class InvoiceDetailModelTestCase(TestCase):
 
         test_invoice_detail = InvoiceDetail.objects.create(
             invoice=self.test_invoice,
-            service=self.test_service
+            service=self.test_service,
+            unit_price=self.test_service.price
         )
 
         new_count = InvoiceDetail.objects.count()
@@ -156,12 +158,14 @@ class InvoiceDetailViewTestCase(TestCase):
 
         self.invoice_detail_data = {
             "invoice": self.test_invoice.id,
-            "service": self.test_service.id
+            "service": self.test_service.id,
+            "unit_price": self.test_service.price
         }
 
         self.invoice_detail = InvoiceDetail.objects.create(
             invoice=self.test_invoice,
-            service=self.test_service
+            service=self.test_service,
+            unit_price=self.test_service.price
         )
 
 
@@ -169,7 +173,8 @@ class InvoiceDetailViewTestCase(TestCase):
         """Test the API has InvoiceDetail creation capability (with a service)."""
         invoice_detail_with_a_service = {
             "invoice": self.test_invoice.id,
-            "service": self.test_service.id
+            "service": self.test_service.id,
+            "unit_price": self.test_service.price
         }
 
         response = self.api_client.post(
@@ -185,7 +190,8 @@ class InvoiceDetailViewTestCase(TestCase):
         """Test the API has InvoiceDetail creation capability (with a product)."""
         invoice_detail_with_a_product = {
             "invoice": self.test_invoice.id,
-            "product": self.test_product.id
+            "product": self.test_product.id,
+            "unit_price": self.test_product.price
         }
 
         response = self.api_client.post(
@@ -201,8 +207,9 @@ class InvoiceDetailViewTestCase(TestCase):
         """Test the API has InvoiceDetail creation capability (paid with a prepaid card)."""
         invoice_detail_with_a_product = {
             "invoice": self.test_invoice.id,
-            "product": self.test_product.id,
-            "prepaid_card": self.test_prepaid_card.id
+            "service": self.test_service.id,
+            "prepaid_card": self.test_prepaid_card.id,
+            "unit_price": self.test_service.price
         }
 
         response = self.api_client.post(
@@ -284,7 +291,7 @@ class InvoiceDetailViewTestCase(TestCase):
 
 
     def test_api_can_delete_a_invoice_detail(self):
-        """Test the API can delete a given InvoiceDetail."""
+        """Test the """
         response = self.api_client.delete(
             reverse('invoice-detail-details',
             kwargs={'pk': self.invoice_detail.id}),

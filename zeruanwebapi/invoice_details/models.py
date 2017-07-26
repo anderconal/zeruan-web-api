@@ -57,6 +57,7 @@ class InvoiceDetail(models.Model):
         default=PAYMENT_METHODS.CASH,
         max_length=255
     )
+    unit_price = models.DecimalField(max_digits=5, decimal_places=2)
 
     class Meta:
         """ No InvoiceDetail with same Invoice.id. """

@@ -16,4 +16,4 @@ class InvoiceDetailSerializer(serializers.ModelSerializer):
         prepaid_card = serializers.PrimaryKeyRelatedField(queryset=PrepaidCard.objects.all())
 
         model = InvoiceDetail
-        fields = ('id', 'invoice', 'service', 'product', 'prepaid_card', 'quantity', 'vat', 'discount', 'payment_method')
+        fields = ('id', 'invoice', 'service', 'product', 'prepaid_card', 'quantity', 'vat', 'discount', 'payment_method', 'unit_price')

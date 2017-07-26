@@ -54,7 +54,7 @@ class PrepaidCard(Product):
         Client,
         on_delete=models.CASCADE)
     purchase_date = models.DateTimeField(
-        default=timezone.now())
+        default=timezone.now)
     expiry_date = models.DateTimeField(
         default=add_years(timezone.now(), 1)
     )
