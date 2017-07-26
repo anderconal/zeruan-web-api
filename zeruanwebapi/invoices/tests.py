@@ -152,6 +152,7 @@ class InvoiceViewTestCase(TestCase):
 
 
     def test_api_can_delete_a_invoice(self):
+        """Test the API can delete a given Invoice."""
         response = self.api_client.delete(
             reverse('invoice-details',
             kwargs={'pk': self.invoice.id}),
