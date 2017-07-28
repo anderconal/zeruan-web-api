@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'my_user.apps.MyUserConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -44,7 +45,7 @@ INSTALLED_APPS = [
     'services.apps.ServicesConfig',
     'invoices.apps.InvoicesConfig',
     'invoice_details.apps.InvoiceDetailsConfig',
-    'appointments.apps.AppointmentsConfig'
+    'appointments.apps.AppointmentsConfig',
 ]
 
 MIDDLEWARE = [
@@ -139,3 +140,5 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     )
 }
+
+AUTH_USER_MODEL = 'my_user.User'

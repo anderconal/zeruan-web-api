@@ -8,7 +8,8 @@ from .models import PARTNER_OPTIONS, KNOWN_FOR_CHOICES, LOPD_CHANNEL_CHOICES, LO
 from rest_framework.test import APIClient
 from rest_framework import status
 from django.core.urlresolvers import reverse
-
+from rest_framework.authtoken.models import Token
+from my_user.models import User
 
 class ClientModelTestCase(TestCase):
     """This class defines the test suite for the Client model."""
@@ -84,7 +85,9 @@ class ClientViewTestCase(TestCase):
     """Test suite for the Client view."""
     def setUp(self):
         """Defines the test API client and other test variables."""
+        token = self.getToken()
         self.api_client = APIClient()
+        self.api_client.credentials(HTTP_AUTHORIZATION='Token ' + token)
 
         self.client_data = {
             "dni": "00099887y",
@@ -129,6 +132,11 @@ class ClientViewTestCase(TestCase):
             lopd_options=LOPD_OPTION_CHOICES.FOTODEPILACION,
             notes='Test'
         )
+
+    def getToken(self):
+        user = User.objects.create_user(username='testusername', password='testpassword', email='testemail@test.es')
+        token = Token.objects.get_or_create(user=user)
+        return token[0].key
 
 
     def test_api_can_create_a_client(self):

@@ -6,10 +6,6 @@ from model_utils import Choices
 from services.models import Service
 from clients.models import Client
 from invoices.models import Invoice
-from django.db.models.signals import post_save
-from django.contrib.auth.models import User
-from rest_framework.authtoken.models import Token
-from django.dispatch import receiver
 
 APPOINTMENT_STATES = Choices(
     ('PENDING', 'Pendiente'),
@@ -37,9 +33,3 @@ class Appointment(models.Model):
 
     def __unicode__(self):
         return 'Appointment: ' + str(self.id)
-
-# This receiver handles token creation immediately a new user is created.
-@receiver(post_save, sender=User)
-def create_auth_token(sender, instance=None, created=False, **kwargs):
-    if created:
-        Token.objects.create(user=instance)

@@ -98,9 +98,3 @@ class Client(models.Model):
 
     def __str__(self):
         return self.name + ' ' + self.surname + ' ' + self.second_surname
-
-# This receiver handles token creation immediately a new user is created.
-@receiver(post_save, sender=User)
-def create_auth_token(sender, instance=None, created=False, **kwargs):
-    if created:
-        Token.objects.create(user=instance)

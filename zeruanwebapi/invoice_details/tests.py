@@ -11,6 +11,8 @@ from datetime import datetime
 from rest_framework.test import APIClient
 from rest_framework import status
 from django.core.urlresolvers import reverse
+from rest_framework.authtoken.models import Token
+from my_user.models import User
 
 class InvoiceDetailModelTestCase(TestCase):
     """This class defines the test suite for the InvoiceDetail model."""
@@ -105,7 +107,9 @@ class InvoiceDetailViewTestCase(TestCase):
     """Test suite for the InvoiceDetail views."""
     def setUp(self):
         """Defines the test client and other test variables."""
+        token = self.getToken()
         self.api_client = APIClient()
+        self.api_client.credentials(HTTP_AUTHORIZATION='Token ' + token)
 
         self.test_client = Client.objects.create(
             dni='12345678t',
@@ -167,6 +171,12 @@ class InvoiceDetailViewTestCase(TestCase):
             service=self.test_service,
             unit_price=self.test_service.price
         )
+
+
+    def getToken(self):
+        user = User.objects.create_user(username='testusername', password='testpassword', email='testemail@test.es')
+        token = Token.objects.get_or_create(user=user)
+        return token[0].key
 
 
     def test_api_can_create_a_invoice_detail_with_a_service(self):

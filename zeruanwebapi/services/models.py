@@ -33,9 +33,3 @@ class Service(models.Model):
 
     def __unicode__(self):
         return self.category + ': ' + self.name
-
-# This receiver handles token creation immediately a new user is created.
-@receiver(post_save, sender=User)
-def create_auth_token(sender, instance=None, created=False, **kwargs):
-    if created:
-        Token.objects.create(user=instance)

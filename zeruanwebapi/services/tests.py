@@ -6,7 +6,8 @@ from .models import Service, CATEGORIES
 from rest_framework.test import APIClient
 from rest_framework import status
 from django.core.urlresolvers import reverse
-
+from rest_framework.authtoken.models import Token
+from my_user.models import User
 
 class ServiceModelTestCase(TestCase):
     """This class defines the test suite for the Service model."""
@@ -62,7 +63,9 @@ class ServiceViewTestCase(TestCase):
     """Test suite for the Service view."""
     def setUp(self):
         """Defines the test API client and other test variables."""
+        token = self.getToken()
         self.api_client = APIClient()
+        self.api_client.credentials(HTTP_AUTHORIZATION='Token ' + token)
 
         self.service_data = {
             "name": "Pedicura Zeruan",
@@ -77,8 +80,14 @@ class ServiceViewTestCase(TestCase):
             category=CATEGORIES.MANICURA,
             description='Test description'
         )
-    
-    
+
+
+    def getToken(self):
+        user = User.objects.create_user(username='testusername', password='testpassword', email='testemail@test.es')
+        token = Token.objects.get_or_create(user=user)
+        return token[0].key
+
+
     def test_api_can_create_a_service(self):
         """Test the API has Client creation capability."""
         response = self.api_client.post(
