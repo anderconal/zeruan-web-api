@@ -6,7 +6,6 @@ from rest_framework.authtoken.views import obtain_auth_token
 urlpatterns = {
     url(r'^appointments/$', AppointmentCreateView.as_view(), name="appointment-create"),
     url(r'^appointments/(?P<pk>[0-9]+)/$', AppointmentDetailsView.as_view(), name="appointment-details"),
-    url(r'^get-token/', obtain_auth_token),
 }
 
 urlpatterns = format_suffix_patterns(urlpatterns)

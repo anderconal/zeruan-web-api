@@ -16,7 +16,7 @@ Including another URLconf
 
 from django.contrib import admin
 from django.conf.urls import url, include
-
+from rest_framework.authtoken.views import obtain_auth_token
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -25,5 +25,6 @@ urlpatterns = [
     url(r'^', include('services.urls')),
     url(r'^', include('invoices.urls')),
     url(r'^', include('invoice_details.urls')),
-    url(r'^', include('appointments.urls'))
+    url(r'^', include('appointments.urls')),
+    url(r'^get-token/', obtain_auth_token),
 ]
